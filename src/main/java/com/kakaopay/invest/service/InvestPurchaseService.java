@@ -37,11 +37,10 @@ public class InvestPurchaseService {
 
         // 거래내역 insert
 
-        // 이미 투자한 상품인지 확인
+        // 이전에 투자한 상품인지 확인
         Optional<TbCustMst> custItem = tbCustMstRepo.findByCustIdAndPrdtId(custId, prdtId);
         if ( !custItem.isEmpty() ) {
-            //이미 투자한 상품
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.ALREADY_INVESTED);
         }
 
         // 상품 가져오기
@@ -49,7 +48,7 @@ public class InvestPurchaseService {
         logger.debug("tbPrdtMst : " + prdtItem.toString());
         if ( prdtItem.isEmpty() ) {
             //상품 없음
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.NO_DATA_FOUND);
         }
         TbPrdtMst buyItem = prdtItem.get();
         logger.debug("buyItem : " + buyItem.toString());
@@ -59,34 +58,36 @@ public class InvestPurchaseService {
         // 상품 상태 확인
         if ( ! buyItem.getStatCd().equals(Constants.PRDT_MST_STAT_CD_OPEN.toString()) ) {
             //상품 상태 오류
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.INVEST_FAILUE);
         }
 
         // 시작일자 확인
         int compStartdAt = buyItem.getStartedAt().compareTo(nowTime);
         if ( compStartdAt > 0 ) {
             //시작일자 오류
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.NOT_INVESTABLE_DATE);
         }
 
         // 종료일자 확인
         int compFinishedAt = buyItem.getFinishedAt().compareTo(nowTime);
         if ( compFinishedAt < 0 ) {
             //종료일자 오류
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.NOT_INVESTABLE_DATE);
         }
 
         // 금액 확인
         if ( buyItem.getAmtCur() + ivstAmt >= buyItem.getAmtTot() ) {
             //상품 투자가능금액 초과
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.AMOUNT_EXCEEDED);
         }
 
+        // 투자 가능한지 확인 로직 END
+
         // 상품 투자금 update
-        // PHS 개발해야함...
-        if ( tbPrdtMstRepo.updateAmtCurAndUserCur(prdtId, ivstAmt) == 0 ) {
+        int ret = tbPrdtMstRepo.updateAmtCurAndUserCur(prdtId, ivstAmt);
+        if ( ret == 0 ) {
             // 투자금 초과로 투자 실패
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.AMOUNT_EXCEEDED);
         }
 
         // 유저 테이블 insert

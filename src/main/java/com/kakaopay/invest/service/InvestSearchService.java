@@ -39,7 +39,7 @@ public class InvestSearchService {
         // 상품 건수 체크
         logger.debug("tbPrdtMst : " + tbPrdtMst.size());
         if ( tbPrdtMst.size() <= 0 ) {
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.NO_DATA_FOUND);
         }
 
         tbPrdtMst.forEach(s->{
@@ -62,6 +62,7 @@ public class InvestSearchService {
             item.setFinishedAt(dateFormat.format(s.getFinishedAt()));   // 상품모집 종료일시
             retDto.getProcuctItemList().add(item);
         });
+        logger.debug("retDto : " + retDto.toString());
         return retDto;
     }
 
@@ -76,7 +77,7 @@ public class InvestSearchService {
         
         // 투자한 상품 없음
         if ( tbCustMst.size() < 1 ) {
-            throw new InvestFailureException(ReturnCode.NOT_FOUND);
+            throw new InvestFailureException(ReturnCode.NO_DATA_FOUND);
         }
 
         tbCustMst.forEach(s->{
@@ -85,19 +86,19 @@ public class InvestSearchService {
             Optional<TbPrdtMst> tbPrdtMst = tbPrdtMstRepo.findById(s.getPrdtId());
             logger.debug("tbPrdtMst : " + tbPrdtMst.toString());
             if ( tbPrdtMst.isEmpty() ) {
-                //상품 없음
-                throw new InvestFailureException(ReturnCode.NOT_FOUND);
+                throw new InvestFailureException(ReturnCode.NO_DATA_FOUND);
             }
             TbPrdtMst prdtItem = tbPrdtMst.get();
 
             SelectMyProductItemDto itemDto = new SelectMyProductItemDto();
             itemDto.setPrdtId(s.getPrdtId());
-            itemDto.setPrdtNm(prdtItem.getPrdtNm()); // PHS 상품 마스터랑 조인해야함.
-            itemDto.setTotAmt(prdtItem.getAmtTot()); // PHS 상품 마스터랑 조인해야함.
+            itemDto.setPrdtNm(prdtItem.getPrdtNm());
+            itemDto.setTotAmt(prdtItem.getAmtTot());
             itemDto.setIvstAmt(s.getAmtCur());
             itemDto.setStartedAt(dateFormat.format(s.getStartedAt()));
             retDto.getProcuctItemList().add(itemDto);
         });
+        logger.debug("retDto : " + retDto.toString());
         return retDto;
     }
 }

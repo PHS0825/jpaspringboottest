@@ -10,9 +10,4 @@ public final class Constants {
     public static final String USER_MST_STAT_CD_OPEN = "01";
     public static final String USER_MST_STAT_CD_CLOSE = "02";
 
-    /* 거래이력(TB_TRD_LST) 거래구분코드 */
-    public static final String TRD_LST_TRD_TYPE_ALLPRDT = "01";
-    public static final String TRD_LST_TRD_TYPE_BUYPRDT = "02";
-    public static final String TRD_LST_TRD_TYPE_MYPRDT = "03";
-
 }

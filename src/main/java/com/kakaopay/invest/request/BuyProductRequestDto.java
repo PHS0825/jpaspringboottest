@@ -6,9 +6,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Setter
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class BuyProductRequestDto {
 
     /* 상품ID */

@@ -32,7 +32,11 @@ dependencies {
     implementation 'mysql:mysql-connector-java'
 
     implementation "org.projectlombok:lombok:${lombokVersion}"
-    implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+
+    implementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'junit:junit:4.13'
+    implementation 'org.jetbrains:annotations:20.1.0'
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
 }
 

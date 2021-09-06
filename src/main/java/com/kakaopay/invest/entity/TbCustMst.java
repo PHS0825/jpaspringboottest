@@ -58,14 +58,19 @@ public class TbCustMst {
     @Column(name = "DB_UPD_TRD_UNI_KEY", length = 24)
     private String dbUpdTrdUniKey;
 
-/*
+
     @PrePersist
-    public void dbUpdDate() {
-        this.dbInsDate = new Date();
-        this.dbUpdDate = new Date();
-        //this.dbUpdDate = LocalDateTime.now();
+    public void insertCreatedAt() {
+        Date nowDate = new Date();
+
+        setDbInsDate(nowDate);
+        setDbInsId("APP");
+        //setDbInsTrdUniKey();
+
+        setDbUpdDate(nowDate);
+        setDbUpdId("APP");
+        //setDbUpdTrdUniKey();
     }
- */
 }
 
 

@@ -1,10 +1,4 @@
 package com.kakaopay.invest.controller;
-/*
-public class InvestFailureExceptionController {
-
-}
-*/
-
 
 import com.kakaopay.invest.constants.ReturnCode;
 import com.kakaopay.invest.exception.InvestFailureException;
@@ -13,9 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,7 +36,6 @@ public class InvestFailureExceptionController {
         return new CommResponseDto(ReturnCode.INVEST_FAILUE);
     }
 
-
     /*
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.OK)
@@ -67,88 +57,3 @@ public class InvestFailureExceptionController {
     */
 
 }
-
-
-/*
-
-//exception
-@Getter
-public class InvestFailureException extends RuntimeException{
-
-    private ReturnCode returnCode;
-
-    public InvestFailureException(String message, ReturnCode returnCode){
-        super(message);
-        this.returnCode = checkNotNull(returnCode);
-    }
-}
-
-
-
-    //enum
-    @Getter
-    @AllArgsConstructor
-    public enum ReturnCode {
-        SUCCESS("0000", "Success"),
-
-        ALREADY_IN_PROGRESS("1001", "Something is already in progress"),
-        INVEST_FAILUE("1002", "invest failure occured");
-
-        UNKNOWN_ERROR("9999", "Unexpectly unknown error has occurred");
-
-
-        private String code;
-        private String message;
-    }
-
-
-
-
-    //exceptionHandler
-    @Slf4j
-    @ControllerAdvice
-    public class ExceptionHandler {
-
-        @org.springframework.web.bind.annotation.ExceptionHandler(InvestFailureException.class)
-        @ResponseStatus(HttpStatus.OK)
-        @ResponseBody
-        public CommonResponse<?> handlerManagedException(InvestFailureException e, HttpServletRequest request) {
-            return new CommonResponse<>(e.getReturnCode());
-        }
-
-        @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-        @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-        @ResponseBody
-        public CommonResponse<?> handleException(Exception e) {
-            log.error("[ExceptionHandler] Unexpected error occurred", e);
-            return new CommonResponse<>(ReturnCode.UNKNOWN_ERROR);
-        }
-    }
-
-
-
-
-    //dto
-    @Setter
-    @Getter
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public class CommonResponse<T> {
-
-        private String returnCode;
-        private String returnMessage;
-
-        public CommonResponse() {
-            setReturnCode(ReturnCode.SUCCESS.getCode());
-            setReturnMessage(ReturnCode.SUCCESS.getMessage());
-        }
-
-        public CommonResponse(ReturnCode returnCode) {
-            this.returnCode = returnCode.getCode();
-            this.returnMessage = returnCode.getMessage();
-        }
-    }
-
-
-    //실제 서비스에서 사용
-    throw new InvestFailureException(ReturnCode.ALREADY_IN_PROGRESS);
-*/
