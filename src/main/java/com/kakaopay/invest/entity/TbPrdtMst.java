@@ -14,7 +14,6 @@ import java.util.Date;
 @AllArgsConstructor
 //@NoArgsConstructor
 @Entity
-@Data
 @ToString
 @Table(name="TB_PRDT_MST")
 public class TbPrdtMst {

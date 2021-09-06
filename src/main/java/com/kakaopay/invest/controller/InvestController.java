@@ -1,26 +1,23 @@
 package com.kakaopay.invest.controller;
 
-import com.kakaopay.invest.constants.Constants;
-import com.kakaopay.coupon.entity.CrdtAuthDTO;
-import com.kakaopay.coupon.entity.TbAuthTrdLst;
-import com.kakaopay.invest.entity.BuyPrdtDTO;
-import com.kakaopay.invest.service.InvestService;
+import com.kakaopay.invest.request.BuyProductRequestDto;
+import com.kakaopay.invest.response.*;
+import com.kakaopay.invest.service.InvestPurchaseService;
+import com.kakaopay.invest.service.InvestSearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 
 @Slf4j
@@ -30,64 +27,71 @@ import java.util.UUID;
 public class InvestController {
 
     @Autowired
-    InvestService investService;
+    InvestSearchService investSearchService;
+
+    @Autowired
+    InvestPurchaseService investPurchaseService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     /* 전체투자상품조회 API */
     @PostMapping("/selPrdtInfo")
-    public Map<String, Object> SelectProductAll() {
-        Map<String, Object> retMap = new HashMap<>();
-
-        retMap = investService.SelectProductAll();
-        return retMap;
+    public SelectProductAllResponseDto SelectProductAll() {
+        SelectProductAllResponseDto retDto = investSearchService.SelectProductAll();
+        logger.debug("SelectProductAllResponseDto : " + retDto);
+        return retDto;
     }
 
     /* 투자하기 API */
     @PostMapping("/buyPrdt")
-    public Map<String, Object> BuyProduct(@RequestHeader(value = "X-USER-ID") String custId,
-                                          @Valid @RequestBody BuyPrdtDTO bytprdtDto) {
-        Map<String, Object> retMap = new HashMap<>();
+    public BuyProductResponseDto BuyProduct(@RequestHeader(value = "X-USER-ID") String custId,
+                                            @Valid @RequestBody BuyProductRequestDto buyProductRequestDto) {
+        // 입력값 체크
+        if ( custId.isBlank() )
+        {
+            //retMap.put("respCd", "999");
+            //retMap.put("respMsg", "아이디 없음");
+            //return retMap;
+        }
 
-        retMap = investService.BuyProduct(custId, bytprdtDto.getPrdtId(), bytprdtDto.getIvstAmt());
-        return retMap;
+        BuyProductResponseDto retDto = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+        logger.debug("BuyProductResponseDto : " + retDto);
+        return retDto;
     }
 
     /* 나의투자상품조회 API */
     @PostMapping("/selMyPrdt")
-    public Map<String, Object> SelectProductByUserId(@RequestHeader(value = "X-USER-ID") String custId) {
-        Map<String, Object> retMap = new HashMap<>();
+    public SelectMyProductResponseDto SelectProductByUserId(@RequestHeader(value = "X-USER-ID") String custId) {
 
         // 입력값 체크
         if ( custId.isBlank() )
         {
-            retMap.put("respCd", "999");
-            retMap.put("respMsg", "아이디 없음");
-            return retMap;
+            //retMap.put("respCd", "999");
+            //retMap.put("respMsg", "아이디 없음");
+            //return retMap;
         }
-        //retMap = investService.SelectProductByUserId("PRDT0003");
-        retMap = investService.SelectProductByUserId(custId);
-        return retMap;
+
+        SelectMyProductResponseDto retDto = investSearchService.SelectProductByUserId(custId);
+        return retDto;
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, Object> processValidationError(MethodArgumentNotValidException ex) {
+    @ResponseStatus(HttpStatus.OK)
+    public CommResponseDto processValidationError(MethodArgumentNotValidException ex) {
+        CommResponseDto retDto = new CommResponseDto();
+
         BindingResult result = ex.getBindingResult();
-
-        Map<String, Object> retMap = new HashMap<>();
-
-        if ( result.hasErrors() ) {
+        if (result.hasErrors()) {
             FieldError error = result.getFieldError();
-            String message[] = error.getDefaultMessage().split("\\|");
-            retMap.put("respCd", message[0]);
-            retMap.put("respMsg", message[1]);
-
-            logger.debug("===============================================");
             logger.debug("getDefaultMessage[" + error.getDefaultMessage() + "]");
-            logger.debug("===============================================");
+
+            String message[] = error.getDefaultMessage().split("\\|");
+            retDto.setRespCd(message[0]);
+            retDto.setRespMsg(message[1]);
         }
-        return retMap;
+        return retDto;
     }
 
     /*

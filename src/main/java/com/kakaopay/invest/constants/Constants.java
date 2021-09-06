@@ -15,7 +15,4 @@ public final class Constants {
     public static final String TRD_LST_TRD_TYPE_BUYPRDT = "02";
     public static final String TRD_LST_TRD_TYPE_MYPRDT = "03";
 
-    /* 응답코드 */
-    public static final String RESP_CD_DEFAULT = "999";
-    public static final String RESP_CD_SUCCESS = "000";
 }
