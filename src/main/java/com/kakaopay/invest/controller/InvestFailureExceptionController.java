@@ -2,7 +2,7 @@ package com.kakaopay.invest.controller;
 
 import com.kakaopay.invest.constants.ReturnCode;
 import com.kakaopay.invest.exception.InvestFailureException;
-import com.kakaopay.invest.response.CommResponseDto;
+import com.kakaopay.invest.response.CommResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,16 +24,16 @@ public class InvestFailureExceptionController {
     @ExceptionHandler(InvestFailureException.class)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public CommResponseDto handlerManagedException(InvestFailureException e, HttpServletRequest request) {
-        return new CommResponseDto(e.getReturnCode());
+    public CommResponse handlerManagedException(InvestFailureException e, HttpServletRequest request) {
+        return new CommResponse(e.getReturnCode());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public CommResponseDto handleException(Exception e) {
+    public CommResponse handleException(Exception e) {
         logger.error("[ExceptionHandler] Unexpected error occurred", e);
-        return new CommResponseDto(ReturnCode.INVEST_FAILUE);
+        return new CommResponse(ReturnCode.INVEST_FAILUE);
     }
 
     /*

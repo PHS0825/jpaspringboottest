@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BuyProductRequestDto {
+public class BuyProductRequest {
 
     /* 상품ID */
     @NotNull(message="9999|prdtId is not null")

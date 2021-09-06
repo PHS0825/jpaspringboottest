@@ -9,13 +9,13 @@ import java.util.List;
 @Builder
 //@NoArgsConstructor
 @AllArgsConstructor
-public class SelectProductAllResponseDto extends CommResponseDto {
-
-    public SelectProductAllResponseDto() {
+public class AllProductListResponse extends CommResponse {
+    public AllProductListResponse() {
         this.ProcuctItemList = new ArrayList<>();
     }
 
     /* 상품 리스트 */
-    private ArrayList<SelectProductAllItemDto> ProcuctItemList;
+    private ArrayList<AllProductItem> ProcuctItemList;
+
 }
 

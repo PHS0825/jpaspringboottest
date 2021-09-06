@@ -3,7 +3,7 @@ package com.kakaopay.invest.service;
 
 import com.kakaopay.invest.constants.ReturnCode;
 import com.kakaopay.invest.exception.InvestFailureException;
-import com.kakaopay.invest.response.CommResponseDto;
+import com.kakaopay.invest.response.CommResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -38,7 +38,7 @@ public class InvestSearchServiceTest {
      */
     @Test
     public void selectProductAllWhenResultIsSuccess() {
-        CommResponseDto ret = investSearchService.SelectProductAll();
+        CommResponse ret = investSearchService.SelectProductAll();
         logger.debug("retCd : " + ret.getRespCd());
         logger.debug("retMsg : " + ret.getRespMsg());
         Assert.assertEquals(ret.getRespCd(), ReturnCode.SUCCESS.getRespCd());
@@ -49,7 +49,7 @@ public class InvestSearchServiceTest {
      */
     @Test
     public void selectProductByUserIdWhenResultIsSuccess() {
-        CommResponseDto ret = investSearchService.SelectProductByUserId("1001");
+        CommResponse ret = investSearchService.SelectProductByUserId("1001");
         logger.debug("retCd : " + ret.getRespCd());
         logger.debug("retMsg : " + ret.getRespMsg());
         Assert.assertEquals(ret.getRespCd(), ReturnCode.SUCCESS.getRespCd());
@@ -61,7 +61,7 @@ public class InvestSearchServiceTest {
     @Test
     public void selectProductByUserIdWhenResultIsNoDataFound() {
         try {
-            CommResponseDto ret = investSearchService.SelectProductByUserId("NoDataFoundTest");
+            CommResponse ret = investSearchService.SelectProductByUserId("NoDataFoundTest");
         } catch (InvestFailureException e) {
             logger.debug("retCd : " + e.getReturnCode().getRespCd());
             logger.debug("retMsg : " + e.getReturnCode().getRespMsg());

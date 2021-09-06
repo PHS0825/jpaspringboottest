@@ -6,12 +6,12 @@ import lombok.*;
 @Data
 //@Builder
 //@NoArgsConstructor
-public class CommResponseDto {
-    public CommResponseDto() {
+public class CommResponse {
+    public CommResponse() {
         setRespCd(ReturnCode.SUCCESS.getRespCd());
         setRespMsg(ReturnCode.SUCCESS.getRespMsg());
     }
-    public CommResponseDto(ReturnCode returnCode) {
+    public CommResponse(ReturnCode returnCode) {
         setRespCd(returnCode.getRespCd());
         setRespMsg(returnCode.getRespMsg());
     }

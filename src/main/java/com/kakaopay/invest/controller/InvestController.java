@@ -2,7 +2,7 @@ package com.kakaopay.invest.controller;
 
 import com.kakaopay.invest.constants.ReturnCode;
 import com.kakaopay.invest.exception.InvestFailureException;
-import com.kakaopay.invest.request.BuyProductRequestDto;
+import com.kakaopay.invest.request.BuyProductRequest;
 import com.kakaopay.invest.response.*;
 import com.kakaopay.invest.service.InvestPurchaseService;
 import com.kakaopay.invest.service.InvestSearchService;
@@ -38,44 +38,45 @@ public class InvestController {
 
     /* 전체투자상품조회 API */
     @PostMapping("/selPrdtInfo")
-    public SelectProductAllResponseDto SelectProductAll() {
-        SelectProductAllResponseDto retDto = investSearchService.SelectProductAll();
-        logger.debug("SelectProductAllResponseDto : " + retDto);
+    public AllProductListResponse SelectProductAll() {
+        AllProductListResponse retDto = investSearchService.SelectProductAll();
+        logger.debug("AllProductListResponse : " + retDto);
         return retDto;
     }
 
     /* 투자하기 API */
     @PostMapping("/buyPrdt")
-    public BuyProductResponseDto BuyProduct(@NotNull @RequestHeader(value = "X-USER-ID") String custId,
-                                            @Valid @RequestBody BuyProductRequestDto buyProductRequestDto) {
+    public BuyProductResponse BuyProduct(@NotNull @RequestHeader(value = "X-USER-ID") String custId,
+                                            @Valid @RequestBody BuyProductRequest buyProductRequest) {
         // 입력값 체크
         if ( custId.isBlank() ) {
             throw new InvestFailureException(ReturnCode.FORMAT_ERROR);
         }
 
-        BuyProductResponseDto retDto = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
-        logger.debug("BuyProductResponseDto : " + retDto);
+        BuyProductResponse retDto = investPurchaseService.BuyProduct(custId, buyProductRequest);
+        logger.debug("BuyProductRequest : " + retDto);
         return retDto;
     }
 
     /* 나의투자상품조회 API */
     @PostMapping("/selMyPrdt")
-    public SelectMyProductResponseDto SelectProductByUserId(@NotNull @RequestHeader(value = "X-USER-ID") String custId) {
+    public MyProductListResponse SelectProductByUserId(@NotNull @RequestHeader(value = "X-USER-ID") String custId) {
 
         // 입력값 체크
         if ( custId.isBlank() ) {
             throw new InvestFailureException(ReturnCode.FORMAT_ERROR);
         }
 
-        SelectMyProductResponseDto retDto = investSearchService.SelectProductByUserId(custId);
+        MyProductListResponse retDto = investSearchService.SelectProductByUserId(custId);
+        logger.debug("MyProductListResponse : " + retDto);
         return retDto;
     }
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.OK)
-    public CommResponseDto processValidationError(MethodArgumentNotValidException ex) {
-        CommResponseDto retDto = new CommResponseDto();
+    public CommResponse processValidationError(MethodArgumentNotValidException ex) {
+        CommResponse retDto = new CommResponse();
 
         BindingResult result = ex.getBindingResult();
         if (result.hasErrors()) {

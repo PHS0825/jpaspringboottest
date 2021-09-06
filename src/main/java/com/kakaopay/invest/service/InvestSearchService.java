@@ -27,14 +27,14 @@ public class InvestSearchService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public SelectProductAllResponseDto SelectProductAll() {
-        SelectProductAllResponseDto retDto = new SelectProductAllResponseDto();
+    public AllProductListResponse SelectProductAll() {
+        AllProductListResponse retDto = new AllProductListResponse();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date nowTime = new Date();
 
         /* 전체 상품을 가져온다. */
-        List<TbPrdtMst> tbPrdtMst = tbPrdtMstRepo.findByStartedAtLessThanEqualAndFinishedAtGreaterThanEqualAndStatCdOrderByPrdtIdAsc(nowTime, nowTime, Constants.PRDT_MST_STAT_CD_OPEN.toString());
+        List<TbPrdtMst> tbPrdtMst = tbPrdtMstRepo.findByStartedAtLessThanEqualAndFinishedAtGreaterThanEqualAndStatCdOrderByPrdtIdAsc(nowTime, nowTime, Constants.PRDT_MST_STAT_CD_OPEN);
 
         // 상품 건수 체크
         logger.debug("tbPrdtMst : " + tbPrdtMst.size());
@@ -45,7 +45,7 @@ public class InvestSearchService {
         tbPrdtMst.forEach(s->{
             logger.debug("tbPrdtMst : " + s.toString());
 
-            SelectProductAllItemDto item = new SelectProductAllItemDto();
+            AllProductItem item = new AllProductItem();
 
             // 상품모집상태
             if ( s.getAmtTot() > s.getAmtCur() )
@@ -66,13 +66,13 @@ public class InvestSearchService {
         return retDto;
     }
 
-    public SelectMyProductResponseDto SelectProductByUserId(String custId) {
-        SelectMyProductResponseDto retDto = new SelectMyProductResponseDto();
+    public MyProductListResponse SelectProductByUserId(String custId) {
+        MyProductListResponse retDto = new MyProductListResponse();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         // 사용자 투자상품 가져오기
-        List<TbCustMst> tbCustMst = tbCustMstRepo.findByCustIdAndStatCd(custId, Constants.USER_MST_STAT_CD_OPEN.toString());
+        List<TbCustMst> tbCustMst = tbCustMstRepo.findByCustIdAndStatCd(custId, Constants.USER_MST_STAT_CD_OPEN);
         logger.debug("TbCustMst : " + tbCustMst.size());
         
         // 투자한 상품 없음
@@ -90,7 +90,7 @@ public class InvestSearchService {
             }
             TbPrdtMst prdtItem = tbPrdtMst.get();
 
-            SelectMyProductItemDto itemDto = new SelectMyProductItemDto();
+            MyProductItem itemDto = new MyProductItem();
             itemDto.setPrdtId(s.getPrdtId());
             itemDto.setPrdtNm(prdtItem.getPrdtNm());
             itemDto.setTotAmt(prdtItem.getAmtTot());

@@ -3,8 +3,8 @@ package com.kakaopay.invest.service;
 
 import com.kakaopay.invest.constants.ReturnCode;
 import com.kakaopay.invest.exception.InvestFailureException;
-import com.kakaopay.invest.request.BuyProductRequestDto;
-import com.kakaopay.invest.response.CommResponseDto;
+import com.kakaopay.invest.request.BuyProductRequest;
+import com.kakaopay.invest.response.CommResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -42,11 +42,11 @@ public class investPurchaseServiceTest {
     @Test
     public void BuyProductWhenResultIsSuccess() {
         String custId = Long.toString(Instant.now().toEpochMilli());
-        BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto("TEST0001", 1000L);
+        BuyProductRequest buyProductRequest = new BuyProductRequest("TEST0001", 1000L);
 
         logger.debug("custId : " + custId);
 
-        CommResponseDto ret = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+        CommResponse ret = investPurchaseService.BuyProduct(custId, buyProductRequest);
         logger.debug("retCd : " + ret.getRespCd());
         logger.debug("retMsg : " + ret.getRespMsg());
         Assert.assertEquals(ret.getRespCd(), ReturnCode.SUCCESS.getRespCd());
@@ -58,15 +58,15 @@ public class investPurchaseServiceTest {
     @Test
     public void BuyProductWhenResultIsAlreadyInvested() {
         String custId = Long.toString(Instant.now().toEpochMilli());
-        BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto("TEST0001", 1000L);
+        BuyProductRequest buyProductRequest = new BuyProductRequest("TEST0001", 1000L);
 
         logger.debug("custId : " + custId);
 
         // 최초투자
-        investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+        investPurchaseService.BuyProduct(custId, buyProductRequest);
         try {
             // 중복투자
-            CommResponseDto ret = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+            CommResponse ret = investPurchaseService.BuyProduct(custId, buyProductRequest);
         } catch (InvestFailureException e) {
             logger.debug("retCd : " + e.getReturnCode().getRespCd());
             logger.debug("retMsg : " + e.getReturnCode().getRespMsg());
@@ -80,12 +80,12 @@ public class investPurchaseServiceTest {
     @Test
     public void BuyProductWhenResultIsNoDataFound() {
         String custId = Long.toString(Instant.now().toEpochMilli());
-        BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto("NoDataFoundTest", 1000L);
+        BuyProductRequest buyProductRequest = new BuyProductRequest("NoDataFoundTest", 1000L);
 
         logger.debug("custId : " + custId);
         try {
             // 중복투자
-            CommResponseDto ret = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+            CommResponse ret = investPurchaseService.BuyProduct(custId, buyProductRequest);
         } catch (InvestFailureException e) {
             logger.debug("retCd : " + e.getReturnCode().getRespCd());
             logger.debug("retMsg : " + e.getReturnCode().getRespMsg());
@@ -100,12 +100,12 @@ public class investPurchaseServiceTest {
     @Test
     public void BuyProductWhenResultIsInvestFailue() {
         String custId = Long.toString(Instant.now().toEpochMilli());
-        BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto("TEST0002", 1000L);
+        BuyProductRequest buyProductRequest = new BuyProductRequest("TEST0002", 1000L);
 
         logger.debug("custId : " + custId);
         try {
             // 중복투자
-            CommResponseDto ret = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+            CommResponse ret = investPurchaseService.BuyProduct(custId, buyProductRequest);
         } catch (InvestFailureException e) {
             logger.debug("retCd : " + e.getReturnCode().getRespCd());
             logger.debug("retMsg : " + e.getReturnCode().getRespMsg());
@@ -120,11 +120,11 @@ public class investPurchaseServiceTest {
     @Test
     public void BuyProductWhenResultIsNotInvestableStartedDate() {
         String custId = Long.toString(Instant.now().toEpochMilli());
-        BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto("TEST0003", 1000L);
+        BuyProductRequest buyProductRequest = new BuyProductRequest("TEST0003", 1000L);
 
         logger.debug("custId : " + custId);
         try {
-            CommResponseDto ret = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+            CommResponse ret = investPurchaseService.BuyProduct(custId, buyProductRequest);
         } catch (InvestFailureException e) {
             logger.debug("retCd : " + e.getReturnCode().getRespCd());
             logger.debug("retMsg : " + e.getReturnCode().getRespMsg());
@@ -138,11 +138,11 @@ public class investPurchaseServiceTest {
     @Test
     public void BuyProductWhenResultIsNotInvestableFinishedDate() {
         String custId = Long.toString(Instant.now().toEpochMilli());
-        BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto("TEST0004", 1000L);
+        BuyProductRequest buyProductRequest = new BuyProductRequest("TEST0004", 1000L);
 
         logger.debug("custId : " + custId);
         try {
-            CommResponseDto ret = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+            CommResponse ret = investPurchaseService.BuyProduct(custId, buyProductRequest);
         } catch (InvestFailureException e) {
             logger.debug("retCd : " + e.getReturnCode().getRespCd());
             logger.debug("retMsg : " + e.getReturnCode().getRespMsg());
@@ -156,11 +156,11 @@ public class investPurchaseServiceTest {
     @Test
     public void BuyProductWhenResultIsAmountExceeded() {
         String custId = Long.toString(Instant.now().toEpochMilli());
-        BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto("TEST0005", 10000000L);
+        BuyProductRequest buyProductRequest = new BuyProductRequest("TEST0005", 10000000L);
 
         logger.debug("custId : " + custId);
         try {
-            CommResponseDto ret = investPurchaseService.BuyProduct(custId, buyProductRequestDto);
+            CommResponse ret = investPurchaseService.BuyProduct(custId, buyProductRequest);
         } catch (InvestFailureException e) {
             logger.debug("retCd : " + e.getReturnCode().getRespCd());
             logger.debug("retMsg : " + e.getReturnCode().getRespMsg());

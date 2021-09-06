@@ -6,6 +6,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 //@AllArgsConstructor
-public class BuyProductResponseDto extends CommResponseDto {
+public class BuyProductResponse extends CommResponse {
 
 }
